@@ -1,0 +1,35 @@
+# ======================
+# General
+# ======================
+.DS_Store
+.env
+.env.local
+
+# ======================
+# Node / React (client)
+# ======================
+node_modules/
+dist/
+.vite/
+
+# ======================
+# .NET / ASP.NET Core (server)
+# ======================
+bin/
+obj/
+
+# SQLite database
+*.db
+*.db-shm
+*.db-wal
+
+# User-specific files
+*.user
+*.suo
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# Logs
+*.log
