@@ -1,62 +1,81 @@
-
 .gc {
-  border: 2px solid #63e3c1;
+  border: 1px solid #63e3c1;
   overflow: hidden;
-  background: --color-card-bg;
   position: relative;
+  height: 560px; 
+  width: 100%;
+  background: #1a083f;
+  --body-height: 220px;
+  --body-height-hover: 330px;
+ 
 }
-
 
 .gc__media {
   position: relative;
+  inset: 0;
+  height: 340px;
+  z-index: 1;
+}
+
+.gc__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.654);
+  opacity: 0;
+  transition: opacity 180ms ease;
+  pointer-events: none;
 }
 
 .gc__img {
   width: 100%;
-  aspect-ratio: 3 / 4;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
 
-
 .gc__cashbackPill {
   position: absolute;
   bottom: 54px;
-  background: #7be9d0;
+  left: 0;
+  background: #62e2c0;
   color: #0a1630;
-  font-weight: 900;
-  letter-spacing: 0.4px;
-  padding: 10px 14px;
-  display: inline-flex;
+  font-weight: 700;
+  padding: 8px 14px;
+  display: flex;
   align-items: center;
   gap: 10px;
+  z-index: 5;
+
 }
 
 .gc__cashbackIcon {
-  height: 12px;
-  width: auto;
+  height: 18px;
 }
+
 .gc__platform {
   position: absolute;
+  bottom: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  height: 42px;
+  height: 30px;
   background: rgba(0, 0, 0, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  color: rgba(255, 255, 255, 0.9);
   font-weight: 700;
+  color: white;
+  z-index: 5;
+
+
 }
 
 .gc__platformDot {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #37d68b;
-  opacity: 0.9;
+  background: #62e2c0;
   display: grid;
   place-items: center;
 }
@@ -64,44 +83,72 @@
 .gc__platformDotIcon {
   height: fit-content;
   width: auto;
-  display: block;
-  color: #fff;
 }
 
 .gc__body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--body-height);
   padding: 14px 16px 16px;
-  background: radial-gradient(120% 90% at 30% 0%, #2a0e66 0%, #1f0a4d 55%, #1a083f 100%);
+  background: #1f0a4d;
+  transition: transform 180ms ease, height 180ms ease;
+  will-change: transform, height;
+  z-index: 3;
+}
+.gc:hover .gc__body {
+  height: var(--body-height-hover);         
+  transform: translateY(0);   
+}
+.gc:hover .gc__platform {
+  bottom: 110px;
+  transition: transform 180ms ease;
+}
+
+.gc:hover .gc__cashbackPill {
+  bottom: 164px;
+}
+
+.gc__content {
+  transition: transform 180ms ease;
 }
 
 .gc__title {
   font-weight: 900;
   font-size: 14px;
-  line-height: 1.25;
   margin-bottom: 10px;
-  color: rgba(255, 255, 255, 0.95);
+  color: white;
 }
 
 .gc__region {
   font-weight: 900;
   letter-spacing: 0.8px;
+  color: #25ad90;
   margin-bottom: 10px;
-  color: #ff6b87; 
 }
-
 
 .gc__fromRow {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 6px;
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.7);
-  font-weight: 600;
+  margin-bottom: 6px;
 }
 
+.gc__priceRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gc__price {
+  font-size: 30px;
+  font-weight: 600;
+  color: white;
+}
 .gc__oldPrice {
   text-decoration: line-through;
   color: rgba(255, 255, 255, 0.55);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .gc__discount {
@@ -109,44 +156,22 @@
   font-weight: 900;
 }
 
-
-.gc__priceRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 6px;
-}
-
-.gc__price {
-  color: white;
-  font-size: 30px;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-}
-
 .gc__info {
   width: 22px;
   height: 22px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.35);
+  color: white;
   display: grid;
   place-items: center;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
 }
-
 
 .gc__cashbackLine {
-  font-size: 16px;
-  font-weight: 800;
   color: #41f083;
+  font-weight: 800;
   margin-bottom: 10px;
 }
-
-.gc__cashbackValue {
-  font-weight: 950;
-}
-
 
 .gc__likes {
   display: flex;
@@ -158,28 +183,36 @@
 
 .gc__heart {
   width: 18px;
-  height: 18px;
-  opacity: 0.85;
 }
 
+
 .gc__actions {
-  margin-top: 14px;
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
   display: grid;
   gap: 12px;
-
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(16px);
   pointer-events: none;
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
+.gc:hover .gc__actions {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+
+
 .gc__btn {
-  height: 54px;
-  border-radius: 0; 
-  border: 0;
-  cursor: pointer;
-  font-weight: 900;
+  height: 52px;
   font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+  border: 0;
 }
 
 .gc__btn--primary {
@@ -190,15 +223,14 @@
 .gc__btn--ghost {
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.85);
-  color: rgba(255, 255, 255, 0.95);
+  color: white;
 }
 
-.gc:hover .gc__actions {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.gc:hover {
-  filter: brightness(1.03);
+.gc__body,
+.gc__platform,
+.gc__cashbackPill,
+.gc__actions,
+.gc__media::after {
+  transition-duration: 180mx;
+  transition-timing-function: ease;
 }

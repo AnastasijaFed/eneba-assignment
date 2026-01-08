@@ -2,6 +2,8 @@ import "./GameCard.css";
 import cashbackIcon from "../assets/cashback.png"
 import xboxIcon from "../assets/xbox-icon.svg"
 import psnIcon from "../assets/playstation-icon.png" 
+import switchIcon from "../assets/switch.svg"
+
 
 export default function GameCard({game}){
     const title = game?.title ?? "";
@@ -15,7 +17,27 @@ export default function GameCard({game}){
 
     const platformIcon = platform.toLowerCase().includes("xbox") ? xboxIcon :
     (platform.includes("ps") || platform.toLowerCase().includes("playstation") || platform.includes("psn")) ? psnIcon :
+    (platform.includes("nintendo switch") || platform.toLowerCase().includes("swicth")) ?  switchIcon :
     null;
+    const discount = game?.discount ?? null;
+    const discountType = (discount?.type ?? "").trim().toLowerCase();
+    const discountAmount = Number(discount?.amount ?? 0);
+
+    let oldPrice = null;
+    let discountLabel = null;
+
+    if (discountAmount > 0 && price > 0) {
+      if (discountType === "percent") {
+        if (discountAmount < 100) {
+          oldPrice = price / (1 - discountAmount / 100);
+          discountLabel = `-${discountAmount}%`;
+        }
+      } else if (discountType === "fixed") {
+        oldPrice = price + discountAmount;
+        discountLabel = `-€${discountAmount.toFixed(2)}`;
+      }
+    }
+
 
      return(
         <article className="gc">
@@ -38,16 +60,20 @@ export default function GameCard({game}){
       </div>
 
       <div className="gc__body">
-        <div className="gc__title">{title}</div>
+          <div className="gc__content">
+            <div className="gc__title">{title}</div>
 
         <div className="gc__region">{region.toUpperCase()}</div>
-
-        {/* <div className="gc__fromRow">
-          <span className="gc__fromLabel">From</span>
-          {oldPrice ? <span className="gc__oldPrice">€{oldPrice.toFixed(2)}</span> : null}
-          {discountPercent ? <span className="gc__discount">-{discountPercent}%</span> : null}
-        </div> */}
-
+       
+          <div className="gc__fromRow">
+            <span className="gc__fromLabel">From</span>
+             {oldPrice && discountLabel ? (
+              <>
+              <span className="gc__oldPrice">€{oldPrice.toFixed(2)}</span>
+              <span className="gc__discount">{discountLabel}</span>
+              </>
+                ) : null}
+          </div>
         <div className="gc__priceRow">
           <div className="gc__price">€{price.toFixed(2)}</div>
           <div className="gc__info" aria-hidden="true">i</div>
@@ -69,6 +95,8 @@ export default function GameCard({game}){
           </svg>
           <span>{likes}</span>
         </div>
+          </div>
+        
 
         <div className="gc__actions">
           <button className="gc__btn gc__btn--primary" type="button">
