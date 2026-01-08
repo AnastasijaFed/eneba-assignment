@@ -7,6 +7,66 @@ namespace server.Data // change if needed
 {
     public static class DbSeeder
     {
+         public static void SeedDiscounts(AppDbContext db)
+{
+    if (db.Discounts.Any())
+        return;
+
+    var now = DateTime.UtcNow;
+
+
+    var listingData = (
+        from l in db.GameListings.AsNoTracking()
+        join g in db.Games.AsNoTracking() on l.GameId equals g.Id
+        select new { ListingId = l.Id, Title = g.Title }
+    ).ToList();
+
+    if (listingData.Count == 0)
+        return;
+
+
+    var onePerGame = listingData
+        .OrderBy(x => x.ListingId)
+        .GroupBy(x => x.Title)
+        .Select(grp => grp.First())
+        .ToList();
+
+
+    Discount Percent(int listingId, int percent, int days) => new Discount
+    {
+        GameListingId = listingId,
+        Amount = percent,
+        Type = "percent",
+        EndsAt = now.AddDays(days)
+    };
+
+    var discounts = new List<Discount>();
+
+
+    foreach (var x in onePerGame)
+    {
+        if (x.Title == "FIFA 23")
+            discounts.Add(Percent(x.ListingId, 20, 30));
+        else if (x.Title == "Red Dead Redemption 2")
+            discounts.Add(Percent(x.ListingId, 15, 20));
+        else if (x.Title == "Split Fiction")
+            discounts.Add(Percent(x.ListingId, 10, 25));
+    }
+
+    var already = discounts.Select(d => d.GameListingId).ToHashSet();
+    var extras = listingData
+        .Where(x => !already.Contains(x.ListingId))
+        .OrderByDescending(x => x.ListingId) 
+        .Take(2)
+        .ToList();
+
+    foreach (var e in extras)
+        discounts.Add(Percent(e.ListingId, 5, 15));
+
+    db.Discounts.AddRange(discounts);
+    db.SaveChanges();
+}
+
         public static void Seed(AppDbContext db)
         {
             db.Database.Migrate();
@@ -21,16 +81,16 @@ namespace server.Data // change if needed
                 db.SaveChanges();
             }
 
-            // Seed only if there are no listings yet
+
             if (db.GameListings.Any())
                 return;
 
-            // Resolve game IDs
+
             var fifa  = db.Games.AsNoTracking().Single(g => g.Title == "FIFA 23");
             var rdr2  = db.Games.AsNoTracking().Single(g => g.Title == "Red Dead Redemption 2");
             var split = db.Games.AsNoTracking().Single(g => g.Title == "Split Fiction");
 
-            // One image per game title (reused for all variants)
+
             const string fifaImg  = "/games/fifa23.jpg";
             const string rdr2Img  = "/games/rdr2.jpg";
             const string splitImg = "/games/splitfiction.jpg";
