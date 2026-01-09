@@ -1,16 +1,49 @@
-# React + Vite
+# Game Marketplace
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a full-stack web application that displays a game marketplace with game cards, search, and discounts.
 
-Currently, two official plugins are available:
+The frontend is built with **React (Vite)** and shows a marketplace-style UI where users can browse games, search by name, and see discounted listings.  
+The backend is an **ASP.NET Core Web API** that exposes a public `/list` endpoint with search support and serves data from a PostgreSQL database hosted on Supabase.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Frontend
+- React
+- Vite
+- TypeScript / JavaScript
+- Deployed on **Vercel**
 
-## Expanding the ESLint configuration
+### Backend
+- ASP.NET Core Web API
+- Entity Framework Core
+- PostgreSQL (Supabase)
+- Deployed on **Railway**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Database
+- PostgreSQL (Supabase)
+- EF Core migrations and seeding
+
+---
+
+## Features
+
+- Game marketplace UI with cards
+- Search with query support (`/list?search=`)
+- Discounts on selected game listings
+- Backend REST API for fetching game data
+
+---
+
+## Api overview
+
+GET /list – returns all game listings
+GET /list?search=term – returns filtered results based on search input
+
+---
+## Deployment
+
+Backend: Railway
+Database: Supabase (PostgreSQL)
+Frontend: Verc
