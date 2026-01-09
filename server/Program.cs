@@ -14,7 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
-        policy.WithOrigins("http://localhost:5173", "https://your-app-name.vercel.app")
+        policy.WithOrigins("http://localhost:5173", "https://eneba-assignment.vercel.app/")
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
