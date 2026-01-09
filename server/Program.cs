@@ -9,6 +9,7 @@ var allowedOrigins = builder.Configuration["AllowedOrigins"]?.Split(',') ?? new[
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+builder.Services.AddMemoryCache();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 

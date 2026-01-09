@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.Models;
 using FuzzySharp;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace server.Controllers;
 
@@ -12,41 +13,47 @@ namespace server.Controllers;
 public class GamesController : ControllerBase
 {
     private readonly AppDbContext _db;
-    public GamesController(AppDbContext db) => _db = db;
+    private readonly IMemoryCache _cache;
+    public GamesController(AppDbContext db, IMemoryCache cache)
+    {
+        _db = db;
+        cache = _cache;
+        
+    }  
 
     [HttpGet("/list")]
     public async Task<ActionResult<List<Game>>> List([FromQuery] string? search)
     {
         var now = DateTime.UtcNow;
-         var candidates = await (
-        from listing in _db.GameListings.AsNoTracking()
-        join game in _db.Games.AsNoTracking()
-            on listing.GameId equals game.Id
-        select new
-        {
-            ListingId = listing.Id,
-            Title = game.Title,
-            Platform = listing.Platform,
-            Region = listing.Region,
-            Price = listing.Price,
-            CashbackPercent = listing.CashbackPercent,
-            ImgUrl = listing.ImgUrl,
-            Likes = listing.Likes
+        if (!_cache.TryGetValue("all_games", out List<Candidate> candidates)){
+            candidates = await (
+                from listing in _db.GameListings.AsNoTracking()
+                join game in _db.Games.AsNoTracking() on listing.GameId equals game.Id
+                select new Candidate 
+                {
+                    ListingId = listing.Id,
+                    Title = game.Title,
+                    Platform = listing.Platform,
+                    Region = listing.Region,
+                    Price = listing.Price,
+                    CashbackPercent = listing.CashbackPercent,
+                    ImgUrl = listing.ImgUrl,
+                    Likes = listing.Likes
+                }
+        ).ToListAsync();
+
+        _cache.Set("all_games", candidates, TimeSpan.FromMinutes(5));
         }
-    ).ToListAsync();
             
+        if (!string.IsNullOrWhiteSpace(search)){
+            var q = search.Trim();
 
-         if (!string.IsNullOrWhiteSpace(search))
-    {
-        var q = search.Trim();
-
-        var threshold = q.Length switch
-        {
+            var threshold = q.Length switch{
             <= 2 => 100,
             <= 4 => 70,
             <= 8 => 75,
             _ => 80
-        };
+            };
 
         candidates = candidates
             .Select(c => new { c, score = Fuzz.PartialRatio(q.ToLower(), c.Title.ToLower()) })
