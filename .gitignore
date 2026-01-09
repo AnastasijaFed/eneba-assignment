@@ -33,3 +33,6 @@ obj/
 
 # Logs
 *.log
+
+# Local development settings
+**/appsettings.Development.json
