@@ -13,12 +13,10 @@ namespace server.Controllers;
 public class GamesController : ControllerBase
 {
     private readonly AppDbContext _db;
-    private readonly IMemoryCache _cache;
-    public GamesController(AppDbContext db, IMemoryCache cache)
+    public GamesController(AppDbContext db)
     {
         _db = db;
-        cache = _cache;
-        
+
     }  
 
     [HttpGet("/list")]
