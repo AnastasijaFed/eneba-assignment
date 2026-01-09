@@ -16,7 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
-        policy.WithOrigins(allowedOrigins)
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
@@ -31,7 +31,7 @@ using (var scope = app.Services.CreateScope())
     DbSeeder.SeedDiscounts(db);
 }
 
-
+app.UseHttpsRedirection();
 app.UseCors();
 
 
@@ -40,7 +40,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 app.MapControllers();
-app.UseHttpsRedirection();
+
 
 
 app.Run();
