@@ -17,7 +17,7 @@ export default function GameCard({game}){
 
     const platformIcon = platform.toLowerCase().includes("xbox") ? xboxIcon :
     (platform.includes("ps") || platform.toLowerCase().includes("playstation") || platform.includes("psn")) ? psnIcon :
-    (platform.includes("nintendo switch") || platform.toLowerCase().includes("swicth")) ?  switchIcon :
+    (platform.toLowerCase().includes("nintendo") || platform.toLowerCase().includes("switch")) ? switchIcon :
     null;
     const discount = game?.discount ?? null;
     const discountType = (discount?.type ?? "").trim().toLowerCase();

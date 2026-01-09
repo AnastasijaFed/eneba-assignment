@@ -66,6 +66,7 @@ function App() {
       <SearchOverlay
         open={isSearchOpen}
         value={search}
+        results={games} 
         onChange={setSearch}
         onClose={() => setIsSearchOpen(false)}
         onClear={() => setSearch("")}
