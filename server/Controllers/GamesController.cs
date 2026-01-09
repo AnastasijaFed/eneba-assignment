@@ -42,14 +42,14 @@ public class GamesController : ControllerBase
 
         var threshold = q.Length switch
         {
-            <= 2 => 0,
-            <= 4 => 45,
-            <= 8 => 55,
-            _ => 60
+            <= 2 => 100,
+            <= 4 => 70,
+            <= 8 => 75,
+            _ => 80
         };
 
         candidates = candidates
-            .Select(c => new { c, score = Fuzz.WeightedRatio(q, c.Title) })
+            .Select(c => new { c, score = Fuzz.PartialRatio(q.ToLower(), c.Title.ToLower()) })
             .Where(x => x.score >= threshold)
             .OrderByDescending(x => x.score)
             .ThenBy(x => x.c.Title)
