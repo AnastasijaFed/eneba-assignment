@@ -25,35 +25,36 @@ public class GamesController : ControllerBase
     public async Task<ActionResult<List<Game>>> List([FromQuery] string? search)
     {
         var now = DateTime.UtcNow;
-        if (!_cache.TryGetValue("all_games", out List<Candidate> candidates)){
-            candidates = await (
-                from listing in _db.GameListings.AsNoTracking()
-                join game in _db.Games.AsNoTracking() on listing.GameId equals game.Id
-                select new Candidate 
-                {
-                    ListingId = listing.Id,
-                    Title = game.Title,
-                    Platform = listing.Platform,
-                    Region = listing.Region,
-                    Price = listing.Price,
-                    CashbackPercent = listing.CashbackPercent,
-                    ImgUrl = listing.ImgUrl,
-                    Likes = listing.Likes
-                }
-        ).ToListAsync();
-
-        _cache.Set("all_games", candidates, TimeSpan.FromMinutes(5));
+        
+         var candidates = await (
+        from listing in _db.GameListings.AsNoTracking()
+        join game in _db.Games.AsNoTracking()
+            on listing.GameId equals game.Id
+        select new
+        {
+            ListingId = listing.Id,
+            Title = game.Title,
+            Platform = listing.Platform,
+            Region = listing.Region,
+            Price = listing.Price,
+            CashbackPercent = listing.CashbackPercent,
+            ImgUrl = listing.ImgUrl,
+            Likes = listing.Likes
         }
+    ).ToListAsync();
             
-        if (!string.IsNullOrWhiteSpace(search)){
-            var q = search.Trim();
 
-            var threshold = q.Length switch{
+         if (!string.IsNullOrWhiteSpace(search))
+    {
+        var q = search.Trim();
+
+        var threshold = q.Length switch
+        {
             <= 2 => 100,
             <= 4 => 70,
             <= 8 => 75,
             _ => 80
-            };
+        };
 
         candidates = candidates
             .Select(c => new { c, score = Fuzz.PartialRatio(q.ToLower(), c.Title.ToLower()) })
