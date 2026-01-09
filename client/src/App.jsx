@@ -5,7 +5,7 @@ import GameGrid from './pages/GamesGrid';
 
 import './App.css'
 
-const API_BASE = "https://eneba-assignment-production.up.railway.app";
+const API_BASE = "eneba-assignment-production.up.railway.app"
 
 
 function App() {
